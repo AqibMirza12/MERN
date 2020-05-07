@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const HttpError = require('./models/http-error');
+const mongoose = require('mongoose');
 
 const placesController = require('./controllers/places-controllers');
 const userRoutes = require('./routes/user-routes');
@@ -21,7 +22,7 @@ app.use('api/users', userRoutes);
 
 app.use('/api/places', placesRoutes); // => /api/places..., first paramater is filter, second is a reference to an imported file
 
-app.use((req,res, next) => {
+app.use((req, res, next) => {
     const error = new HttpError('Could not find this route.', 404); //proper error handling
     throw error;
 });
@@ -34,4 +35,13 @@ app.use((error, req, res, next) => {
    res.json({message: error.message || 'An Unknown error occurred'}); 
 });
 
-app.listen(5000);
+mongoose.connect('mongodb+srv://Aqib12:-7UnxQn7DC8QTFK@mongodb-cluster-6u861.mongodb.net/places?retryWrites=true&w=majority')
+.then(() => {
+    app.listen(5000);
+})
+.catch(err => {
+    console.log(err);
+});
+
+
+

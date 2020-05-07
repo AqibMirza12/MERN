@@ -1,6 +1,9 @@
 const { v4: uuidv4 } = require('uuid'); //unique ID package
 const { validationResult } = require('express-validator');
 
+const HttpError = require('../models/http-error');
+const getCoordsForAddress = require('../Util/location');
+
 let DUMMY_PLACES = [ //let = variable
     {
         id: uuidv4(), //unique id generation
@@ -44,7 +47,7 @@ const getPlacesByUserId = (req, res, next) => {
     res.json({places});
 };
 
-const createPlace = (req, res, next) => {
+const createPlace = async (req, res, next) => {
     const errors = validationResult(req);
     if(!errors.isEmpty())
     {
@@ -52,18 +55,29 @@ const createPlace = (req, res, next) => {
     }
 
     const { title, description, coordinates, address, creator } = req.body;
-    const createdPlace = {
-        title, //shortcut as value is equal
+    const createdPlace = new Place({
+        title,
         description,
-        location: coordinates,
         address,
-        creator
-    };
+        location: coordinates,
+        image: '',
+        creator: ''
+    });
 
-    DUMMY_PLACES.push(createdPlace); //unshift(first element), push(last element)
+    try {
+        
+    await createdPlace.save();
+    } catch(err) {
+        const error = new HttpError(
+            'Creating place failed please try again', 500
+        );
+        return next(error);
+    }
+
 
     res.status(201).json({place: createdPlace});
 };
+
 
 const updatePlace = (req, res, next) => {
     const errors = validationResult(req);

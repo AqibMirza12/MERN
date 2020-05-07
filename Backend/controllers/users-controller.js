@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const { validationResult } = require('express-validator');
+
 const HttpError = require('../models/http-error');
 
 const DUMMY_USERS = [
@@ -9,7 +10,7 @@ const DUMMY_USERS = [
         email: 'test@test.com',
         password: 'testers'
     }
-]
+];
 
 const getUsers = (req, res, next) => {
     res.json({users: DUMMY_USERS});
@@ -34,7 +35,7 @@ const signup = (req, res, next) => {
         name,
         email,
         password
-    }
+    };
 
     DUMMY_USERS.push(createdUser);
 
