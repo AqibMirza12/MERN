@@ -8,7 +8,7 @@ const userSchema = new Schema({
     email: {type: String, required: true, unique: true}, //unique speeds up querying process
     password: {type: String, required: true, minlength: 6}, //minimum length of chars
     image: {type: String, required: true},
-    places: {type: String, required: true}
+    places: [{type: mongoose.Types.ObjectId, required: true, ref: 'Place'}]
 });
 
 userSchema.plugin(uniqueValidator); //add a third-party package to a schema
