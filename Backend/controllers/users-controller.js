@@ -16,7 +16,7 @@ const DUMMY_USERS = [
 const getUsers = async (req, res, next) => {
     let users;
     try {
-        users = await User.find({}, '-password');//projection concept
+        users = await User.find({}, '-password'); //projection concept
     } catch (error) {
         error = new HttpError(
             'Fetching users failed, please try again',
@@ -32,7 +32,7 @@ const signup = async (req, res, next) => {
     const errors = validationResult(req);
     if(!errors.isEmpty())
     {
-        return next (new HttpError('Invalid inputs passed, please check your data', 422)); //422 - invalid response
+        return next(new HttpError('Invalid inputs passed, please check your data', 422)); //422 - invalid response
     }
 
     const { name, email, password } = req.body;
@@ -60,7 +60,7 @@ const signup = async (req, res, next) => {
     const createdUser = new User({
         name,
         email,
-        image: '',
+        image: req.file.path,
         password,
         places: []
     });

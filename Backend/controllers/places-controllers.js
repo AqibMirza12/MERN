@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { v4: uuidv4 } = require('uuid'); //unique ID package
 const { validationResult } = require('express-validator');
 const mongooose = require('mongoose');
@@ -7,20 +8,6 @@ const getCoordsForAddress = require('../Util/location');
 const Place = require('../models/place');
 const User = require('../models/user');
 
-let DUMMY_PLACES = [ //let = variable
-    {
-        id: uuidv4(), //unique id generation
-        title: 'p1',
-        title: 'Empire State Building',
-        description: 'Skyscraper',
-        location: {
-            lat: 40.7484405,
-            lng: -73.9878584
-        },
-        address: '20 W 34th St, New York, NY 10001',
-        creator: 'u1'
-    }
-];
 
 const getPlaceById = async (req, res, next) => { //linked to App.js placesRoute
     const userId = req.params.uid;
@@ -28,7 +15,7 @@ const getPlaceById = async (req, res, next) => { //linked to App.js placesRoute
     let place;
 
     try {
-        const places = await Place.findById(placeId);
+        const place = await Place.findById(placeId);
     } catch (err) {
         error = new HttpError(
             'Something went wrong, could not find a place', 500
@@ -82,7 +69,7 @@ const createPlace = async (req, res, next) => {
         description,
         address,
         location: coordinates,
-        image: '',
+        image: req.file.path,
         creator
     });
 
@@ -102,6 +89,8 @@ const createPlace = async (req, res, next) => {
         error = new HttpError('Could not find user for provided Id', 404);
         return next(error);
     }
+
+    const imagePath = place.image;
 
     try { //db transactions
         const sess = await mongooose.startSession(); //init transaction
@@ -195,6 +184,10 @@ const deletePlace = async (req,res, next) => {
         return next(error);
     }
    
+    fs.unlink(imagePath, err => {
+        console.log(err);
+    });
+
     res.status(200).json({message: 'Deleted place.'});
 };
 
