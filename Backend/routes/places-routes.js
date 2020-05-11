@@ -3,12 +3,15 @@ const { check } = require('express-validator');
 const HttpError = require('../models/http-error');
 const placesControllers = require('../controllers/places-controllers');
 const fileUpload = require('../middleware/file-upload');
+const checkAuth = require('../middleware/check-auth');
 
 const router = express.Router();
 
 router.get('/:pid', placesControllers.getPlaceById);
 
 router.get('/user/:uid', placesControllers.getPlacesByUserId); //has to be pointer
+
+router.use(checkAuth); //backend route protection
 
 router.post
 (
