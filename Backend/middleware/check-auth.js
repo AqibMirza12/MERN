@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
     req.userData = {userId: decodedToken.userId}; //using req in middleware by adding data to request
     next();
   } catch (error) {
-    const error = new HttpError('Authentication failed', 403);
+     error = new HttpError('Authentication failed', 403);
     return next(error);
   }
 };

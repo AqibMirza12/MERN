@@ -58,7 +58,7 @@ const signup = async (req, res, next) => {
   try {
     hashedPassword = await bcrypt.hash(password, 12); //hashing the password variable + salting
   } catch (error) {
-    const error = new HttpError("Could not create user", 500);
+     error = new HttpError("Could not create user", 500);
     return next(error);
   }
 
@@ -86,7 +86,7 @@ const signup = async (req, res, next) => {
       { expiresIn: "1h" }
     );
   } catch (error) {
-    const error = new HttpError("Signing up failed", 500);
+     error = new HttpError("Signing up failed", 500);
     return next(error);
   }
 
@@ -116,7 +116,7 @@ const login = async (req, res, next) => {
   try {
     isValidPassword = await bcrypt.compare(password, existingUser.password);
   } catch (error) {
-    const error = new HttpError(
+     error = new HttpError(
       "Please check your credentials, could not log you in",
       500
     );
@@ -135,8 +135,8 @@ const login = async (req, res, next) => {
       process.env.JWT_KEY, //use same token, as it changes per key
       { expiresIn: "1h" }
     );
-  } catch (error) {
-    const error = new HttpError("Logging in failed", 500);
+  } catch (err) {
+     error = new HttpError("Logging in failed", 500);
     return next(error);
   }
 
