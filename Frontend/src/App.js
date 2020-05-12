@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -13,26 +13,12 @@ import UserPlaces from "./places/pages/UserPlaces";
 import UpdatePlace from "./places/pages/UpdatePlace";
 import Auth from "./user/pages/Auth";
 import { AuthContext } from "./shared/components/context/auth-context";
+import { useAuth } from './shared/Hooks/auth-hook';
 //exact means that the path must be exactly the same
 //redirection algorithm to homepage if page not found (404)
 
 const App = () => {
-  const [token, setToken] = useState(false);
-  const [userId, setUserId] = useState(false);
-
-  const login = useCallback((uid, token) => {
-    setToken(token);
-    localStorage.setItem('userData', JSON.stringify({
-      userId: uid, 
-      token: token
-    }));
-    setUserId(uid);
-  }, []); //preventing infinte loops, stops above function from being re-created
-
-  const logout = useCallback(() => {
-    setToken(null);
-    setUserId(null);
-  }, []);
+  const { token, login, logout, userId } = useAuth();
 
   let routes;
 

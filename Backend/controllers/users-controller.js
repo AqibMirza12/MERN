@@ -82,7 +82,7 @@ const signup = async (req, res, next) => {
     token = jwt.sign(
       //returns a token
       { userId: createdUser.id, email: createdUser.email },
-      "supersecret_dont_share",
+      process.env.JWT_KEY,
       { expiresIn: "1h" }
     );
   } catch (error) {
@@ -132,7 +132,7 @@ const login = async (req, res, next) => {
   try {
     token = jwt.sign(     //returns a token
       { userId: existingUser.id, email: existingUser.email },
-      'supersecret_dont_share', //use same token, as it changes per key
+      process.env.JWT_KEY, //use same token, as it changes per key
       { expiresIn: "1h" }
     );
   } catch (error) {

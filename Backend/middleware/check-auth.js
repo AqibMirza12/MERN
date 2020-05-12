@@ -1,5 +1,5 @@
 const HttpError = require("../models/http-error");
-const jwt = require('jsonwebtoken')l
+const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
     if(req.method === 'OPTIONS') {
@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
     if (!token) {
         throw new Error('Authentication failed');
     }
-    const decodedToken = jwt.verify(token, 'supersecret_dont_share'); //token verification
+    const decodedToken = jwt.verify(token, process.env.JWT_KEY); //token verification
     req.userData = {userId: decodedToken.userId}; //using req in middleware by adding data to request
     next();
   } catch (error) {
